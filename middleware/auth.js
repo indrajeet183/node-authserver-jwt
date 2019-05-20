@@ -74,7 +74,7 @@ AuthController.authenticateUser = function(req, res) {
   return db.Employee.findOne(potentialUser)
     .then(function(user) {
       if (!user) {
-        return res.status(404).json("Authentication failed!");
+	return res.status(404).json('Authentication failed!');
       } else {
         comparePasswords(password, user.password, function(error, isMatch) {
           if (isMatch && !error) {

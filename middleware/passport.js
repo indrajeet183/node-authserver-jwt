@@ -10,11 +10,26 @@ const hookJWTStrategy = passport => {
   options.ignoreExpiration = false;
 
   passport.use(
-    new Strategy(options, (JWTPayload, callback) => {
+    new Strategy(options, (JWTPayload, callback) => {      
       db.Employee.findOne({
         where: {
           office_email: JWTPayload.email
-        }
+        },
+        attributes: ['code','name','role','username'],
+        include: [          
+          {
+            model: db.RolesActions,
+            as:"RolesActions",
+            attributes: ['action'],
+            include:[
+              {
+                model: db.Modules,
+                as:"Modules",
+                attributes: ['name']
+              }
+            ]                      
+          }
+        ]
       }).then(function(user) {
         if (!user) {
           callback(null, false);

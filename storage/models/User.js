@@ -24,10 +24,16 @@ class User extends Sequelize.Model {
         temporary_address: { type: DataTypes.TEXT, allowNull: true },
         marital_status: { type: DataTypes.STRING, allowNull: true },
         passkey: { type: DataTypes.STRING, allowNull: true },
-        timeout: { type: DataTypes.DATE, allowNull: true }
+        timeout: { type: DataTypes.DATE, allowNull: true },
+        role: { type: DataTypes.INTEGER, allowNull: true},
       },
       { sequelize, modelName: "employees", timestamps: false }
     );
+  }
+
+  static associate(sequelize) {
+    this.hasOne(sequelize.Roles,{as:'Role',foreignKey:{name:'id'},sourceKey:'role'});
+    this.hasMany(sequelize.RolesActions,{as:'RolesActions',foreignKey:{name:'role_id'},sourceKey:'role'});
   }
 }
 
