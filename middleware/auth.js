@@ -78,12 +78,16 @@ AuthController.authenticateUser = function(req, res) {
       } else {
         comparePasswords(password, user.password, function(error, isMatch) {
           if (isMatch && !error) {
-            var token = jwt.sign({ email: user.office_email }, process.env.KEY);
+            var token = jwt.sign({ email: user.office_email }, process.env.KEY, {expiresIn:'48h'});
 
             return res.json({
               success: true,
               token: "JWT " + token,
-              role: user.role
+              role: user.role,
+              emp_code: user.code,
+              name: user.name,
+              isAdmin:user.role===1?true:false,
+              designation: user.designation
             });
           } else {
             return res.status(404).json("Login failed!");

@@ -4,28 +4,23 @@ class ModuleActions extends Sequelize.Model {
   static init(sequelize, DataTypes) {
     return super.init(
       {
+        id: {type: DataTypes.INTEGER, allowNull: false, autoIncrement: true, primaryKey: true},
         module: { type: DataTypes.INTEGER, allowNull: false },
         action: { type: DataTypes.STRING, allowNull: false },
-        created_at: { type: DataTypes.STRING, allowNull: false },
-        updated_at: { type: DataTypes.STRING, allowNull: true }
+        name: { type: DataTypes.STRING, allowNull: false },
+        created_at: { type: DataTypes.DATE, allowNull: false, defaultValue: DataTypes.NOW },
+        updated_at: { type: DataTypes.DATE, allowNull: true }
       },
       {
         sequelize,
-        modelName: "module_actions",
         timestamps: false,
         tableName: "module_actions"
       }
     );
   }
 
-  static associate(sequelize) {
-    this.hasMany(sequelize.Modules, {
-      as: "Modules",
-      foreignKey: { name: "id" },
-      sourceKey: "module"
-    });
-    //this.hasMany(sequelize.Roles,{as:'Module',foreignKey:{name:'id'},sourceKey:'module_id'});
-    //this.hasMany(sequelize)
+  static associate(sequelize) {    
+    this.hasOne(sequelize.Modules,{as:'Module',sourceKey:'module',foreignKey:'id'});
   }
 }
 

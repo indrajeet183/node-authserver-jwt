@@ -10,24 +10,24 @@ const hookJWTStrategy = passport => {
   options.ignoreExpiration = false;
 
   passport.use(
-    new Strategy(options, (JWTPayload, callback) => {      
+    new Strategy(options, (JWTPayload, callback) => {
       db.Employee.findOne({
         where: {
           office_email: JWTPayload.email
         },
-        attributes: ['code','name','role','username'],
-        include: [          
+        attributes: ["code", "name", "role", "username", "id"],
+        include: [
           {
             model: db.RolesActions,
-            as:"RolesActions",
-            attributes: ['action'],
-            include:[
+            as: "RolesActionsU",
+            attributes: ["action"],
+            include: [
               {
                 model: db.Modules,
-                as:"Modules",
-                attributes: ['name']
+                as: "Modules",
+                attributes: ["name"]
               }
-            ]                      
+            ]
           }
         ]
       }).then(function(user) {
@@ -35,7 +35,21 @@ const hookJWTStrategy = passport => {
           callback(null, false);
           return;
         }
-        callback(null, user);
+
+        let roleActionsWithModule = user["RolesActionsU"];
+        const mappedRoleActionsWithModule = roleActionsWithModule.map(rm => {
+          return rm.Modules.name + "." + rm.action;
+        });
+
+        callback(null, {
+          code: user.code,
+          name: user.name,
+          role: user.role,
+          username: user.username,
+          id: user.id,
+          roleactions: mappedRoleActionsWithModule,
+          isAdmin: user.role === 1 ? true : false
+        });
       });
     })
   );

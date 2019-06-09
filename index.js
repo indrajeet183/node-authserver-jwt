@@ -5,6 +5,7 @@ import hookJWTStrategy from "./middleware/passport";
 import db from "./storage/db";
 import Api from "./api";
 
+
 const PORT = process.env.PORT || 5000;
 const app = express();
 

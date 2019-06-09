@@ -6,8 +6,8 @@ class Modules extends Sequelize.Model {
       {
         id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
         name: { type: DataTypes.STRING, allowNull: false },
-        created_at: { type: DataTypes.STRING, allowNull: false },
-        updated_at: { type: DataTypes.STRING, allowNull: true }
+        created_at: { type: DataTypes.DATE, allowNull: false, defaultValue: DataTypes.NOW },
+        updated_at: { type: DataTypes.DATE, allowNull: true }
       },
       {
         sequelize,
@@ -21,8 +21,8 @@ class Modules extends Sequelize.Model {
   static associate(sequelize) {
     this.hasMany(sequelize.RolesActions, {
       as: "RoleActions",
-      foreignKey: { name: "module_id" },
-      sourceKey: "id"
+      sourceKey: "id",
+      foreignKey: "module_id"
     });
   }
 }

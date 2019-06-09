@@ -27,13 +27,14 @@ class User extends Sequelize.Model {
         timeout: { type: DataTypes.DATE, allowNull: true },
         role: { type: DataTypes.INTEGER, allowNull: true},
       },
-      { sequelize, modelName: "employees", timestamps: false }
+      { sequelize, modelName: "employees", timestamps: false, tableName:"employees" }
     );
   }
 
   static associate(sequelize) {
-    this.hasOne(sequelize.Roles,{as:'Role',foreignKey:{name:'id'},sourceKey:'role'});
-    this.hasMany(sequelize.RolesActions,{as:'RolesActions',foreignKey:{name:'role_id'},sourceKey:'role'});
+    this.belongsTo(sequelize.Roles,{as:'Role',sourceKey:'id',foreignKey:'role'});    
+    this.hasMany(sequelize.RolesActions,{as:'RolesActionsU',sourceKey:'role' ,foreignKey:'role_id'});    
+    this.hasMany(sequelize.Attendance,{as:'Attendance',sourceKey:'code' ,foreignKey:'employee_code'});    
   }
 }
 

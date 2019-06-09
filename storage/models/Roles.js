@@ -6,6 +6,8 @@ class Roles extends Sequelize.Model {
       {
         id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
         name: { type: DataTypes.STRING, allowNull: true },
+        created_at: {type: DataTypes.DATE, allowNull:false, defaultValue: DataTypes.NOW},
+        updated_at: {type: DataTypes.DATE, allowNull:true}
       },
       {
         sequelize,
@@ -16,8 +18,7 @@ class Roles extends Sequelize.Model {
   }
 
   static associate(sequelize) {
-    this.hasMany(sequelize.RolesActions,{as:'RolesActions',foreignKey:{name:'role_id'},sourceKey:'id'});   
-    //this.hasMany(sequelize)
+    this.hasMany(sequelize.RolesActions,{as:'RolesActions',foreignKey:'role_id'});   
   }
 }
 

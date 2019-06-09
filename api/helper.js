@@ -1,17 +1,24 @@
 import db from "../storage/db";
 
-export const hasAccess = (module, role, action) => {
-  db.RolesActions.findAll({
-      where: {
-          role_id: role,
-          module_id: module,
-          action: action
+export const hasAccess = (role, module, action) => {
+  return db.RolesActions.findAll({
+    where: {
+      role_id: role,
+      action: action
+    },
+    include: [
+      {
+        model: db.Modules,
+        where: { name: module },
+        as: "Modules"
       }
+    ]
   })
-    .then(roleAction => {
-      return true;
+    .then(roleAction => {        
+      return roleAction.length
     })
     .catch(err => {
-      return false
+      //console.log(err);
+      return false;
     });
 };
